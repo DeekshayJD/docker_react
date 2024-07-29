@@ -19,6 +19,28 @@ deploy:
   branch:master
  access_key_id: $AWS_ACCESS_KEY
  secret_access_key: "$AWS_SECRET_KEY"
- 
+
+language: node_js
+node_js:
+  - "14"  # Specify the version of Node.js you are using
+
+services:
+  - docker
+
+before_install:
+  - docker build -t deekshayjd/docker_react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true deekshayjd/docker_react npm test -- --coverage --watchAll=false
+
+env:
+  - CI=true
+
+jobs:
+  include:
+    - stage: test
+      timeout: 20m
+
+
 
  
